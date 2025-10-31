@@ -6,7 +6,7 @@ const isLocal = window.location.hostname === 'localhost' ||
 
 const API_BASE = isLocal 
     ? 'http://127.0.0.1:8000'
-    : 'https://TU-PROYECTO.onrender.com';  // ⚠️ Cambiar esto
+    : 'https://dashboard-seguros-895z.onrender.com';  // ⚠️ Reemplazar [NOMBRE-SERVICIO] con el nombre real después del despliegue en Render
 
 // Mostrar notificación de error toast
 function showErrorToast(message) {

@@ -3,8 +3,8 @@ from sqlmodel import Session, select
 from datetime import datetime, date
 import logging
 from typing import Optional, Dict, Any
-from server.db import engine, init_db
-from server.models import Case, Insured, Policy, Vehicle, Incident, Claim
+from db import engine, init_db
+from models import Case, Insured, Policy, Vehicle, Incident, Claim
 
 # Configure logging
 # logging es para ver que pasa en el codigo
