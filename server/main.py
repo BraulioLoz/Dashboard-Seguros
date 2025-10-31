@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import select, Session, func
 from typing import Optional, Dict
 from pydantic import BaseModel
-from .db import init_db, get_session
-from .models import (
+from db import init_db, get_session, engine
+from models import (
     Insured, Policy, Vehicle, Incident, Claim, Case
 )
 
@@ -47,6 +47,25 @@ app.add_middleware( # Para permitir solicitudes desde el frontend
 @app.on_event("startup") # Se ejecuta al inicio de la aplicación
 def on_startup(): 
     init_db() 
+    
+    # Cargar datos iniciales si la base está vacía
+    from server.models import Case
+    
+    with Session(engine) as session:
+        case_count = session.exec(select(func.count(Case.id))).one()
+        if case_count == 0:
+            print("Database is empty. Loading initial data...")
+            from pathlib import Path
+            csv_path = Path(__file__).parent.parent / "data" / "insurance_claims_clean.csv"
+            if csv_path.exists():
+                from server.add_data import load_to_database
+                try:
+                    result = load_to_database(str(csv_path))
+                    print(f"Data loaded: {result.get('rows_processed', 0)} rows processed")
+                except Exception as e:
+                    print(f"Error loading data: {e}")
+            else:
+                print(f"Warning: CSV file not found at {csv_path}")
     
 @app.get("/")
 def root():
