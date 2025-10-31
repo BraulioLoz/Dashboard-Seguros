@@ -49,7 +49,7 @@ def on_startup():
     init_db() 
     
     # Cargar datos iniciales si la base está vacía
-    from server.models import Case
+    from models import Case
     
     with Session(engine) as session:
         case_count = session.exec(select(func.count(Case.id))).one()
@@ -58,7 +58,7 @@ def on_startup():
             from pathlib import Path
             csv_path = Path(__file__).parent.parent / "data" / "insurance_claims_clean.csv"
             if csv_path.exists():
-                from server.add_data import load_to_database
+                from add_data import load_to_database
                 try:
                     result = load_to_database(str(csv_path))
                     print(f"Data loaded: {result.get('rows_processed', 0)} rows processed")
